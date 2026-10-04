@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Core brand tokens */
+  --forest: #1F3D2B;
+  --forest-600: #162D20;
+  --forest-700: #0F2218;
+  --cream: #F3EDE0;
+  --surface: #FBF8F0;
+  --surface-hover: #F7F2E6;
+  --stone: #E4DCC8;
+  --rule: #D9D1BE;
+  --muted: #5B574E;
+  --brick: #9B3B2A;
+
+  /* Dark mode reference tokens (documented, not built in Phase 3) */
+  --dark-bg: #14231A;
+  --dark-ink: #EDE7D8;
+  --dark-muted: #A9B3A8;
+  --dark-rule: #2D4437;
+
+  /* Typography fallback stacks */
+  --font-serif: 'Cormorant Garamond', 'Times New Roman', Georgia, serif;
+  --font-sans: 'Jost', 'Century Gothic', 'Avenir Next', 'Helvetica Neue', Arial, sans-serif;
+}
+
+html {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+body {
+  background-color: var(--cream);
+  color: var(--forest);
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Headings specification */
+h1, h2 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  font-size: clamp(36px, 7vw, 58px);
+}
+
+h2 {
+  font-size: clamp(30px, 5vw, 40px);
+}
+
+h3 {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+/* Prices never use the serif */
+.tdb-price {
+  font-family: var(--font-sans) !important;
+  font-weight: 500;
+}
+
+/* Accessible focus visible ring: 2px outline, 2px offset */
+*:focus-visible {
+  outline: 2px solid var(--forest);
+  outline-offset: 2px;
+}
+
+/* Inverted focus ring on dark/forest background */
+.on-forest *:focus-visible,
+.on-forest:focus-visible {
+  outline: 2px solid var(--cream) !important;
+  outline-offset: 2px !important;
+}
+
+/* Accessible reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Custom restrained scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--rule);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
