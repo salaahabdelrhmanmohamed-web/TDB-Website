@@ -87,6 +87,20 @@ h3 {
   outline-offset: 2px !important;
 }
 
+/* Restrained 2.5D Hero Float Animation (2–3px subtle floating motion) */
+@keyframes heroFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.animate-heroFloat {
+  animation: heroFloat 5s ease-in-out infinite;
+}
+
 /* Accessible reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

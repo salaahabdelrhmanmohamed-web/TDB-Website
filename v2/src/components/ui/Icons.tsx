@@ -3,6 +3,7 @@ import {
   Search as LucideSearch,
   User as LucideUser,
   ShoppingBag as LucideShoppingBag,
+  ShoppingCart as LucideShoppingCart,
   Menu as LucideMenu,
   ChevronDown as LucideChevronDown,
   ChevronRight as LucideChevronRight,
@@ -54,6 +55,10 @@ export const AccountIcon: React.FC<TdbIconProps> = ({ size = 20, tone = 'forest'
 
 export const BasketIcon: React.FC<TdbIconProps> = ({ size = 20, tone = 'forest', className = '', ...props }) => (
   <LucideShoppingBag size={size} color={toneMap[tone]} {...defaultProps} className={className} {...props} />
+);
+
+export const CartIcon: React.FC<TdbIconProps> = ({ size = 20, tone = 'forest', className = '', ...props }) => (
+  <LucideShoppingCart size={size} color={toneMap[tone]} {...defaultProps} className={className} {...props} />
 );
 
 export const MenuIcon: React.FC<TdbIconProps> = ({ size = 20, tone = 'forest', className = '', ...props }) => (

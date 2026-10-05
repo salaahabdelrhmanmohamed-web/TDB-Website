@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Logo } from '@/components/ui/Logo';
-import { CloseIcon, AccountIcon } from '@/components/ui/Icons';
+import { CloseIcon, AccountIcon, ChevronDownIcon } from '@/components/ui/Icons';
 import { STOREFRONT_CATEGORIES } from '@/config/site';
 
 export interface MobileNavDrawerProps {
@@ -21,6 +21,12 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({
   const pathname = usePathname();
   const drawerRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  const isShopActive = pathname === '/shop' || pathname.startsWith('/category');
+  const isOffersActive = pathname === '/offers';
+  const isRewardsActive = pathname === '/rewards';
+
+  const [isShopExpanded, setIsShopExpanded] = useState(isShopActive);
 
   // Lock body scroll and focus close button when drawer opens
   useEffect(() => {
@@ -80,8 +86,6 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({
 
   if (!isOpen) return null;
 
-  const isShopActive = pathname === '/shop';
-
   return (
     <div
       className="fixed inset-0 z-50 flex justify-end"
@@ -115,41 +119,103 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({
           </button>
         </div>
 
-        {/* Category Navigation Links (Real destinations: /shop, /category/[slug]) */}
+        {/* Primary Navigation Links */}
         <nav
           className="mt-6 flex flex-col space-y-1 font-sans text-[16px] text-forest"
-          aria-label="Mobile category navigation"
+          aria-label="Mobile primary navigation"
         >
+          {/* Shop Expandable Disclosure */}
+          <div>
+            <button
+              type="button"
+              onClick={() => setIsShopExpanded((prev) => !prev)}
+              aria-expanded={isShopExpanded}
+              aria-controls="mobile-shop-categories"
+              className={`w-full min-h-[44px] py-2.5 px-2 flex items-center justify-between rounded-[2px] transition-colors ${
+                isShopActive
+                  ? 'font-semibold text-forest underline underline-offset-4 decoration-2'
+                  : 'text-forest/90 hover:text-forest'
+              } focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest`}
+            >
+              <span>Shop</span>
+              <ChevronDownIcon
+                size={18}
+                tone="forest"
+                className={`transition-transform duration-150 ${
+                  isShopExpanded ? 'rotate-180' : ''
+                }`}
+              />
+            </button>
+
+            {/* Expanded Category Links */}
+            {isShopExpanded && (
+              <div
+                id="mobile-shop-categories"
+                role="region"
+                aria-label="Shop categories"
+                className="pl-3 pr-1 py-1 space-y-0.5 border-l-2 border-rule ml-2 my-1"
+              >
+                <Link
+                  href="/shop"
+                  onClick={onClose}
+                  aria-current={pathname === '/shop' ? 'page' : undefined}
+                  className={`min-h-[44px] py-2 px-2 flex items-center rounded-[2px] text-[15px] ${
+                    pathname === '/shop'
+                      ? 'font-semibold text-forest underline underline-offset-4 decoration-2'
+                      : 'text-forest/85 hover:text-forest hover:underline underline-offset-4'
+                  } focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest`}
+                >
+                  All Products
+                </Link>
+                {STOREFRONT_CATEGORIES.map((cat) => {
+                  const isCatActive = pathname === `/category/${cat.slug}`;
+                  return (
+                    <Link
+                      key={cat.slug}
+                      href={`/category/${cat.slug}`}
+                      onClick={onClose}
+                      aria-current={isCatActive ? 'page' : undefined}
+                      className={`min-h-[44px] py-2 px-2 flex items-center rounded-[2px] text-[15px] ${
+                        isCatActive
+                          ? 'font-semibold text-forest underline underline-offset-4 decoration-2'
+                          : 'text-forest/85 hover:text-forest hover:underline underline-offset-4'
+                      } focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest`}
+                    >
+                      {cat.shortName}
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Offers Link */}
           <Link
-            href="/shop"
+            href="/offers"
             onClick={onClose}
-            aria-current={isShopActive ? 'page' : undefined}
+            aria-current={isOffersActive ? 'page' : undefined}
             className={`min-h-[44px] py-2.5 px-2 flex items-center rounded-[2px] ${
-              isShopActive
+              isOffersActive
                 ? 'font-semibold text-forest underline underline-offset-4 decoration-2'
                 : 'text-forest/90 hover:text-forest hover:underline underline-offset-4'
             } focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest`}
           >
-            All products
+            Offers
           </Link>
-          {STOREFRONT_CATEGORIES.map((cat) => {
-            const isCatActive = pathname === `/category/${cat.slug}`;
-            return (
-              <Link
-                key={cat.slug}
-                href={`/category/${cat.slug}`}
-                onClick={onClose}
-                aria-current={isCatActive ? 'page' : undefined}
-                className={`min-h-[44px] py-2.5 px-2 flex items-center rounded-[2px] ${
-                  isCatActive
-                    ? 'font-semibold text-forest underline underline-offset-4 decoration-2'
-                    : 'text-forest/90 hover:text-forest hover:underline underline-offset-4'
-                } focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest`}
-              >
-                {cat.shortName}
-              </Link>
-            );
-          })}
+
+          {/* Rewards Link */}
+          <Link
+            href="/rewards"
+            onClick={onClose}
+            aria-current={isRewardsActive ? 'page' : undefined}
+            className={`min-h-[44px] py-2.5 px-2 flex items-center rounded-[2px] ${
+              isRewardsActive
+                ? 'font-semibold text-forest underline underline-offset-4 decoration-2'
+                : 'text-forest/90 hover:text-forest hover:underline underline-offset-4'
+            } focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest`}
+          >
+            Rewards
+          </Link>
 
           {/* Account Placeholder (Non-interactive visual indicator - not in tab order) */}
           <div className="pt-4 border-t border-rule mt-4">

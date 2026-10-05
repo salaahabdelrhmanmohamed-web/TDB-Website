@@ -1,16 +1,15 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Logo } from '@/components/ui/Logo';
 import {
   SearchIcon,
-  BasketIcon,
+  CartIcon,
   MenuIcon,
   AccountIcon,
+  ChevronDownIcon,
 } from '@/components/ui/Icons';
-import { STOREFRONT_CATEGORIES } from '@/config/site';
 import { MobileNavDrawer } from './MobileNavDrawer';
 import { StorefrontSearch } from './StorefrontSearch';
 
@@ -24,9 +23,48 @@ export const StorefrontHeader: React.FC<StorefrontHeaderProps> = ({
   const pathname = usePathname();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+  const [isShopDropdownOpen, setIsShopDropdownOpen] = useState(false);
 
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const searchButtonRef = useRef<HTMLButtonElement>(null);
+  const shopButtonRef = useRef<HTMLButtonElement>(null);
+  const shopDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close shop dropdown on outside click
+  useEffect(() => {
+    if (!isShopDropdownOpen) return;
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (
+        shopDropdownRef.current &&
+        !shopDropdownRef.current.contains(e.target as Node) &&
+        shopButtonRef.current &&
+        !shopButtonRef.current.contains(e.target as Node)
+      ) {
+        setIsShopDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, [isShopDropdownOpen]);
+
+  // Close shop dropdown on Escape and restore focus
+  useEffect(() => {
+    if (!isShopDropdownOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setIsShopDropdownOpen(false);
+        shopButtonRef.current?.focus();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isShopDropdownOpen]);
+
+  // Close dropdown on route change
+  useEffect(() => {
+    setIsShopDropdownOpen(false);
+  }, [pathname]);
 
   const handleOpenMobileSearch = () => {
     setIsDrawerOpen(false);
@@ -49,7 +87,9 @@ export const StorefrontHeader: React.FC<StorefrontHeaderProps> = ({
     setIsDrawerOpen(false);
   };
 
-  const isShopActive = pathname === '/shop';
+  const isShopActive = pathname === '/shop' || pathname.startsWith('/category');
+  const isOffersActive = pathname === '/offers';
+  const isRewardsActive = pathname === '/rewards';
 
   return (
     <>
@@ -59,50 +99,188 @@ export const StorefrontHeader: React.FC<StorefrontHeaderProps> = ({
       >
         {/* DESKTOP HEADER (72px) - visible at >=1024px (md:flex) */}
         <div className="hidden md:flex items-center justify-between h-[72px] max-w-[1280px] mx-auto px-6 lg:px-8 gap-6">
-          {/* Brand Logo Link (Real route: /) */}
+          {/* Brand Wordmark Link (Real route: /) */}
           <div className="flex-none">
             <Link
               href="/"
               className="inline-flex items-center min-h-[44px] rounded-[2px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
               aria-label="The Daily Basket Homepage"
             >
-              <Logo variant="full" tone="primary" size={15} />
+              <span className="font-serif text-[28px] font-semibold tracking-[0.03em] text-forest select-none leading-none">
+                TDB
+              </span>
             </Link>
           </div>
 
-          {/* Category Navigation from centralized config (Real routes: /shop, /category/[slug]) */}
+          {/* Primary Navigation: Shop ▾, Offers, Rewards */}
           <nav
-            className="flex items-center space-x-6 text-[15px] font-sans text-forest"
-            aria-label="Main category navigation"
+            className="flex items-center space-x-7 text-[15px] font-sans text-forest relative"
+            aria-label="Primary navigation"
           >
+            {/* Shop Dropdown Trigger */}
+            <div className="relative">
+              <button
+                ref={shopButtonRef}
+                type="button"
+                onClick={() => setIsShopDropdownOpen((prev) => !prev)}
+                onKeyDown={(e) => {
+                  if (e.key === 'ArrowDown' && !isShopDropdownOpen) {
+                    e.preventDefault();
+                    setIsShopDropdownOpen(true);
+                  }
+                }}
+                aria-expanded={isShopDropdownOpen}
+                aria-haspopup="true"
+                aria-controls="shop-dropdown-menu"
+                className={`py-2 px-1 flex items-center gap-1.5 rounded-[2px] transition-colors ${
+                  isShopActive
+                    ? 'font-semibold text-forest underline underline-offset-4 decoration-2'
+                    : 'font-medium text-forest/85 hover:text-forest hover:underline underline-offset-4'
+                } focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest`}
+              >
+                <span>Shop</span>
+                <ChevronDownIcon
+                  size={16}
+                  tone="forest"
+                  className={`transition-transform duration-150 ${
+                    isShopDropdownOpen ? 'rotate-180' : ''
+                  }`}
+                />
+              </button>
+
+              {/* Shop Dropdown Menu (2 columns, accessible, min 44px targets) */}
+              {isShopDropdownOpen && (
+                <div
+                  ref={shopDropdownRef}
+                  id="shop-dropdown-menu"
+                  role="region"
+                  aria-label="Shop categories menu"
+                  className="absolute top-[calc(100%+8px)] left-0 w-[420px] bg-surface border border-rule rounded-[4px] p-5 z-50"
+                >
+                  <div className="grid grid-cols-2 gap-6">
+                    {/* Column 1 */}
+                    <div className="space-y-4">
+                      <div>
+                        <div className="font-sans text-[11px] font-semibold uppercase tracking-wider text-muted px-2 pb-1.5 border-b border-rule select-none">
+                          Shop
+                        </div>
+                        <div className="pt-1">
+                          <Link
+                            href="/shop"
+                            onClick={() => setIsShopDropdownOpen(false)}
+                            className="min-h-[44px] px-2 flex items-center rounded-[2px] font-sans text-[14px] font-medium text-forest hover:bg-cream/70 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
+                          >
+                            All Products
+                          </Link>
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="font-sans text-[11px] font-semibold uppercase tracking-wider text-muted px-2 pb-1.5 border-b border-rule select-none">
+                          Chocolate & Sweets
+                        </div>
+                        <div className="pt-1 space-y-0.5">
+                          <Link
+                            href="/category/chocolates"
+                            onClick={() => setIsShopDropdownOpen(false)}
+                            className="min-h-[44px] px-2 flex items-center rounded-[2px] font-sans text-[14px] text-forest/90 hover:text-forest hover:bg-cream/70 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
+                          >
+                            Chocolates
+                          </Link>
+                          <Link
+                            href="/category/candy-gummies"
+                            onClick={() => setIsShopDropdownOpen(false)}
+                            className="min-h-[44px] px-2 flex items-center rounded-[2px] font-sans text-[14px] text-forest/90 hover:text-forest hover:bg-cream/70 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
+                          >
+                            Candy & Gummies
+                          </Link>
+                          <Link
+                            href="/category/biscuits-cakes"
+                            onClick={() => setIsShopDropdownOpen(false)}
+                            className="min-h-[44px] px-2 flex items-center rounded-[2px] font-sans text-[14px] text-forest/90 hover:text-forest hover:bg-cream/70 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
+                          >
+                            Biscuits & Cakes
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Column 2 */}
+                    <div className="space-y-4">
+                      <div>
+                        <div className="font-sans text-[11px] font-semibold uppercase tracking-wider text-muted px-2 pb-1.5 border-b border-rule select-none">
+                          Snacks
+                        </div>
+                        <div className="pt-1 space-y-0.5">
+                          <Link
+                            href="/category/chips-savory"
+                            onClick={() => setIsShopDropdownOpen(false)}
+                            className="min-h-[44px] px-2 flex items-center rounded-[2px] font-sans text-[14px] text-forest/90 hover:text-forest hover:bg-cream/70 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
+                          >
+                            Chips & Savory
+                          </Link>
+                          <Link
+                            href="/category/bundles"
+                            onClick={() => setIsShopDropdownOpen(false)}
+                            className="min-h-[44px] px-2 flex items-center rounded-[2px] font-sans text-[14px] text-forest/90 hover:text-forest hover:bg-cream/70 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
+                          >
+                            Bundles
+                          </Link>
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="font-sans text-[11px] font-semibold uppercase tracking-wider text-muted px-2 pb-1.5 border-b border-rule select-none">
+                          Drinks
+                        </div>
+                        <div className="pt-1 space-y-0.5">
+                          <Link
+                            href="/category/drinks"
+                            onClick={() => setIsShopDropdownOpen(false)}
+                            className="min-h-[44px] px-2 flex items-center rounded-[2px] font-sans text-[14px] text-forest/90 hover:text-forest hover:bg-cream/70 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
+                          >
+                            Drinks
+                          </Link>
+                          <Link
+                            href="/category/coffee-rtd"
+                            onClick={() => setIsShopDropdownOpen(false)}
+                            className="min-h-[44px] px-2 flex items-center rounded-[2px] font-sans text-[14px] text-forest/90 hover:text-forest hover:bg-cream/70 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
+                          >
+                            Coffee & RTD
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Offers Link */}
             <Link
-              href="/shop"
-              aria-current={isShopActive ? 'page' : undefined}
-              className={`py-2 rounded-[2px] transition-colors ${
-                isShopActive
+              href="/offers"
+              aria-current={isOffersActive ? 'page' : undefined}
+              className={`py-2 px-1 rounded-[2px] transition-colors ${
+                isOffersActive
                   ? 'font-semibold text-forest underline underline-offset-4 decoration-2'
                   : 'font-medium text-forest/85 hover:text-forest hover:underline underline-offset-4'
               } focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest`}
             >
-              All products
+              Offers
             </Link>
-            {STOREFRONT_CATEGORIES.map((cat) => {
-              const isCatActive = pathname === `/category/${cat.slug}`;
-              return (
-                <Link
-                  key={cat.slug}
-                  href={`/category/${cat.slug}`}
-                  aria-current={isCatActive ? 'page' : undefined}
-                  className={`py-2 rounded-[2px] transition-colors ${
-                    isCatActive
-                      ? 'font-semibold text-forest underline underline-offset-4 decoration-2'
-                      : 'font-medium text-forest/85 hover:text-forest hover:underline underline-offset-4'
-                  } focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest`}
-                >
-                  {cat.shortName}
-                </Link>
-              );
-            })}
+
+            {/* Rewards Link */}
+            <Link
+              href="/rewards"
+              aria-current={isRewardsActive ? 'page' : undefined}
+              className={`py-2 px-1 rounded-[2px] transition-colors ${
+                isRewardsActive
+                  ? 'font-semibold text-forest underline underline-offset-4 decoration-2'
+                  : 'font-medium text-forest/85 hover:text-forest hover:underline underline-offset-4'
+              } focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest`}
+            >
+              Rewards
+            </Link>
           </nav>
 
           {/* Right Action Controls: Search area, Account, Basket */}
@@ -128,7 +306,7 @@ export const StorefrontHeader: React.FC<StorefrontHeaderProps> = ({
               title="Basket (Coming soon)"
             >
               <div className="relative flex items-center">
-                <BasketIcon size={20} tone="muted" />
+                <CartIcon size={20} tone="muted" />
                 <span className="absolute -top-1.5 -right-2 bg-muted text-cream text-[10px] w-4 h-4 rounded-full flex items-center justify-center leading-none">
                   0
                 </span>
@@ -151,13 +329,15 @@ export const StorefrontHeader: React.FC<StorefrontHeaderProps> = ({
         ) : (
           /* Mobile Default Header State */
           <div className="flex md:hidden items-center justify-between h-[56px] px-3">
-            {/* Box Logo Link (Real route: /) */}
+            {/* Brand Wordmark Link (Real route: /) */}
             <Link
               href="/"
-              className="w-11 h-11 flex items-center justify-center rounded-[2px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
+              className="min-w-[44px] h-11 px-1 flex items-center justify-center rounded-[2px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
               aria-label="The Daily Basket Homepage"
             >
-              <Logo variant="box" tone="primary" size={11} />
+              <span className="font-serif text-[24px] font-semibold tracking-[0.03em] text-forest select-none leading-none">
+                TDB
+              </span>
             </Link>
 
             {/* Action Targets: Search trigger, Basket placeholder, Menu trigger */}
@@ -179,10 +359,12 @@ export const StorefrontHeader: React.FC<StorefrontHeaderProps> = ({
                 aria-hidden="true"
                 title="Basket (Coming soon)"
               >
-                <BasketIcon size={20} tone="muted" />
-                <span className="absolute top-2 right-2 bg-muted text-cream text-[10px] w-3.5 h-3.5 rounded-full flex items-center justify-center leading-none">
-                  0
-                </span>
+                <div className="relative flex items-center">
+                  <CartIcon size={20} tone="muted" />
+                  <span className="absolute -top-1.5 -right-2 bg-muted text-cream text-[10px] w-3.5 h-3.5 rounded-full flex items-center justify-center leading-none">
+                    0
+                  </span>
+                </div>
               </div>
 
               {/* Menu Trigger */}

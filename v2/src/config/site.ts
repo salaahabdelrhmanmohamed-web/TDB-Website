@@ -8,32 +8,58 @@ export interface StorefrontCategory {
   name: string;
   shortName: string;
   description: string;
+  group: 'chocolate-sweets' | 'snacks' | 'drinks';
 }
 
 export const STOREFRONT_CATEGORIES: StorefrontCategory[] = [
   {
-    slug: 'category-a',
-    name: 'Pantry staples (Example content)',
-    shortName: 'Pantry staples',
-    description: 'Selected oils, grains, and kitchen essentials. (Example content)',
+    slug: 'chocolates',
+    name: 'Chocolates',
+    shortName: 'Chocolates',
+    description: 'Curated premium chocolates, tablets, and artisan bars.',
+    group: 'chocolate-sweets',
   },
   {
-    slug: 'category-b',
-    name: 'Daily bakery (Example content)',
-    shortName: 'Daily bakery',
-    description: 'Naturally fermented bread and morning bakehouse items. (Example content)',
+    slug: 'chips-savory',
+    name: 'Chips & Savory',
+    shortName: 'Chips & Savory',
+    description: 'Crisp snacks, gourmet chips, and savory bites.',
+    group: 'snacks',
   },
   {
-    slug: 'category-c',
-    name: 'Preserves & honey (Example content)',
-    shortName: 'Preserves & honey',
-    description: 'Raw honey varieties and small-batch preserves. (Example content)',
+    slug: 'biscuits-cakes',
+    name: 'Biscuits & Cakes',
+    shortName: 'Biscuits & Cakes',
+    description: 'Fine biscuits, wafers, and bakery cakes.',
+    group: 'chocolate-sweets',
   },
   {
-    slug: 'category-d',
-    name: 'Beverages (Example content)',
-    shortName: 'Beverages',
-    description: 'Whole bean coffees and estate teas. (Example content)',
+    slug: 'candy-gummies',
+    name: 'Candy & Gummies',
+    shortName: 'Candy & Gummies',
+    description: 'Gourmet sweets, chews, and premium gummies.',
+    group: 'chocolate-sweets',
+  },
+  {
+    slug: 'drinks',
+    name: 'Drinks',
+    shortName: 'Drinks',
+    description: 'Sparkling waters, craft sodas, and refreshing drinks.',
+    group: 'drinks',
+  },
+  {
+    slug: 'coffee-rtd',
+    name: 'Coffee & RTD',
+    shortName: 'Coffee & RTD',
+    description: 'Chilled ready-to-drink coffees and bottled brews.',
+    group: 'drinks',
+  },
+  {
+    slug: 'bundles',
+    name: 'Bundles',
+    shortName: 'Bundles',
+    description: 'Curated snack boxes and variety bundles.',
+    group: 'snacks',
   },
 ];
 

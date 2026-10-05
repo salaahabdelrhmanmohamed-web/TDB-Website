@@ -3416,3 +3416,300 @@ svg {
   max-width: 100% !important;
   height: auto;
 }
+
+/* ==========================================================================
+   TDB INJECTED HEADER STYLES (Single navbar, no duplicate topbar)
+   ========================================================================== */
+
+#tdb-injected-header {
+  position: sticky;
+  top: 0;
+  z-index: 999999;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 'Plus Jakarta Sans', sans-serif;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.tdb-navbar {
+  background-color: #f1e9db;
+  color: #1a2e1f;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid #e2d7c5;
+}
+
+.tdb-logo-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: #1a2e1f;
+}
+
+.tdb-logo-box {
+  width: 38px;
+  height: 38px;
+  border: 2px solid #1a2e1f;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 13px;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.tdb-brand-name {
+  font-family: "Cinzel", "EB Garamond", "Times New Roman", serif;
+  font-size: 18px;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tdb-center-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  max-width: 720px;
+  margin: 0 16px;
+}
+
+.tdb-dropdown-container {
+  position: relative;
+}
+
+.tdb-category-btn {
+  background: #e2d7c5;
+  border: none;
+  color: #1a2e1f;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.tdb-category-btn:hover {
+  background: #d4c7b2;
+}
+
+.tdb-dropdown-menu {
+  position: absolute;
+  top: 115%;
+  left: 0;
+  background: #fdfaf5;
+  border: 1px solid #d8cebc;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  width: 200px;
+  padding: 6px 0;
+  display: none;
+  flex-direction: column;
+  z-index: 1000;
+}
+
+[dir="rtl"] .tdb-dropdown-menu {
+  left: auto;
+  right: 0;
+}
+
+.tdb-dropdown-menu.active {
+  display: flex;
+}
+
+.tdb-dropdown-menu a {
+  padding: 9px 16px;
+  color: #1a2e1f;
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.15s, padding 0.15s;
+}
+
+.tdb-dropdown-menu a:hover {
+  background: #f1e9db;
+  padding-left: 20px;
+}
+
+[dir="rtl"] .tdb-dropdown-menu a:hover {
+  padding-left: 16px;
+  padding-right: 20px;
+}
+
+.tdb-search-wrap {
+  position: relative;
+  flex: 1;
+}
+
+.tdb-search-wrap input {
+  width: 100%;
+  background: #fcf9f3;
+  border: 1px solid #d4c7b2;
+  padding: 8px 12px 8px 36px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  color: #1a2e1f;
+  outline: none;
+  box-sizing: border-box;
+}
+
+[dir="rtl"] .tdb-search-wrap input {
+  padding: 8px 36px 8px 12px;
+}
+
+.tdb-search-wrap input:focus {
+  border-color: #1a2e1f;
+  box-shadow: 0 0 0 2px rgba(26, 46, 31, 0.15);
+}
+
+.tdb-search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: #1a2e1f;
+  opacity: 0.6;
+}
+
+[dir="rtl"] .tdb-search-icon {
+  left: auto;
+  right: 10px;
+}
+
+.tdb-nav-link {
+  color: #1a2e1f;
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.tdb-nav-link:hover {
+  background: #e2d7c5;
+}
+
+.tdb-offers-badge {
+  width: 7px;
+  height: 7px;
+  background: #e53e3e;
+  border-radius: 50%;
+}
+
+.tdb-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tdb-rewards-btn {
+  background: transparent;
+  border: 1px solid #1a2e1f;
+  color: #1a2e1f;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.tdb-rewards-btn:hover {
+  background: #1a2e1f;
+  color: #f1e9db;
+}
+
+.tdb-pill-btn {
+  border: 1px solid #1a2e1f;
+  background: transparent;
+  color: #1a2e1f;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tdb-pill-btn:hover {
+  background: #1a2e1f;
+  color: #f1e9db;
+}
+
+.tdb-icon-btn {
+  background: none;
+  border: none;
+  color: #1a2e1f;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: background 0.2s;
+}
+
+.tdb-icon-btn:hover {
+  background: #e2d7c5;
+}
+
+.tdb-cart-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: #1a2e1f;
+  color: #f1e9db;
+  font-size: 9px;
+  font-weight: bold;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+[dir="rtl"] .tdb-cart-badge {
+  right: auto;
+  left: 2px;
+}
+
+@media (max-width: 900px) {
+  .tdb-center-nav {
+    display: none;
+  }
+  .tdb-rewards-btn {
+    display: none;
+  }
+  .tdb-navbar {
+    padding: 10px 16px;
+  }
+}
+
