@@ -106,8 +106,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     <section
       ref={containerRef}
       aria-labelledby="hero-headline"
-      /* Full-bleed expansion: remove card borders & rounded corners, seamlessly bleed into cream background */
-      className={`relative w-full -mx-4 md:-mx-8 -mt-8 px-4 md:px-8 overflow-hidden bg-gradient-to-b from-[#F7F2E7] via-[#F3EDE0] to-cream transition-colors ${className}`}
+      /* Full-bleed: sits at full viewport width naturally — no negative margin hacks needed */
+      className={`relative w-full overflow-hidden bg-gradient-to-b from-[#F7F2E7] via-[#F3EDE0] to-cream transition-colors ${className}`}
     >
       {/* Background Architectural Ambience & Soft Sunlit Vignette */}
       <div

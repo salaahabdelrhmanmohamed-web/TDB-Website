@@ -19,10 +19,10 @@ export default function StorefrontLayout({
       {/* Primary Storefront Header (Desktop 72px / Mobile 56px) */}
       <StorefrontHeader />
 
-      {/* Main Content Area */}
+      {/* Main Content Area — full viewport width; each page/section owns its own inner centering */}
       <main
         id="main-content"
-        className="flex-1 w-full max-w-[1280px] mx-auto px-4 md:px-8 py-8"
+        className="flex-1 w-full"
       >
         {children}
       </main>
