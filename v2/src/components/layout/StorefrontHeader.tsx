@@ -91,14 +91,18 @@ export const StorefrontHeader: React.FC<StorefrontHeaderProps> = ({
   const isOffersActive = pathname === '/offers';
   const isRewardsActive = pathname === '/rewards';
 
+  // Real cart count. No cart state exists yet (cart is out of Phase 4 scope), so the true count is 0.
+  const cartItemCount: number = 0;
+
   return (
     <>
       <header
-        className={`w-full bg-cream border-b border-rule relative z-40 ${className}`}
+        className={`w-full bg-cream border-b border-rule md:border-b-0 relative z-40 ${className}`}
         role="banner"
       >
-        {/* DESKTOP HEADER (72px) - visible at >=1024px (md:flex) */}
-        <div className="hidden md:flex items-center justify-between h-[72px] max-w-[1280px] mx-auto px-6 lg:px-8 gap-6">
+        {/* DESKTOP HEADER - floating pill island (SSOT: approved-header-only.png), visible at >=1024px */}
+        <div className="hidden md:block px-4 lg:px-6 pt-3.5 pb-2">
+        <div className="flex items-center h-[66px] max-w-[1392px] mx-auto pl-8 lg:pl-11 pr-4 lg:pr-6 bg-surface border border-rule/80 rounded-full">
           {/* Brand Wordmark Link (Real route: /) */}
           <div className="flex-none">
             <Link
@@ -106,7 +110,7 @@ export const StorefrontHeader: React.FC<StorefrontHeaderProps> = ({
               className="inline-flex items-center min-h-[44px] rounded-[2px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
               aria-label="The Daily Basket Homepage"
             >
-              <span className="font-serif text-[28px] font-semibold tracking-[0.03em] text-forest select-none leading-none">
+              <span className="font-serif text-[34px] font-bold tracking-[0.02em] text-forest select-none leading-none">
                 TDB
               </span>
             </Link>
@@ -114,7 +118,7 @@ export const StorefrontHeader: React.FC<StorefrontHeaderProps> = ({
 
           {/* Primary Navigation: Shop ▾, Offers, Rewards */}
           <nav
-            className="flex items-center space-x-7 text-[15px] font-sans text-forest relative"
+            className="flex items-center gap-8 lg:gap-10 ml-10 lg:ml-[72px] text-[15px] font-sans text-forest relative"
             aria-label="Primary navigation"
           >
             {/* Shop Dropdown Trigger */}
@@ -132,15 +136,15 @@ export const StorefrontHeader: React.FC<StorefrontHeaderProps> = ({
                 aria-expanded={isShopDropdownOpen}
                 aria-haspopup="true"
                 aria-controls="shop-dropdown-menu"
-                className={`py-2 px-1 flex items-center gap-1.5 rounded-[2px] transition-colors ${
+                className={`min-h-[44px] px-1 flex items-center gap-1.5 rounded-[2px] transition-colors ${
                   isShopActive
-                    ? 'font-semibold text-forest underline underline-offset-4 decoration-2'
-                    : 'font-medium text-forest/85 hover:text-forest hover:underline underline-offset-4'
+                    ? 'font-medium text-forest underline underline-offset-[6px] decoration-[1.5px]'
+                    : 'font-normal text-forest/90 hover:text-forest hover:underline underline-offset-[6px] decoration-[1.5px]'
                 } focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest`}
               >
                 <span>Shop</span>
                 <ChevronDownIcon
-                  size={16}
+                  size={15}
                   tone="forest"
                   className={`transition-transform duration-150 ${
                     isShopDropdownOpen ? 'rotate-180' : ''
@@ -260,10 +264,10 @@ export const StorefrontHeader: React.FC<StorefrontHeaderProps> = ({
             <Link
               href="/offers"
               aria-current={isOffersActive ? 'page' : undefined}
-              className={`py-2 px-1 rounded-[2px] transition-colors ${
+              className={`min-h-[44px] px-1 flex items-center rounded-[2px] transition-colors ${
                 isOffersActive
-                  ? 'font-semibold text-forest underline underline-offset-4 decoration-2'
-                  : 'font-medium text-forest/85 hover:text-forest hover:underline underline-offset-4'
+                  ? 'font-medium text-forest underline underline-offset-[6px] decoration-[1.5px]'
+                  : 'font-normal text-forest/90 hover:text-forest hover:underline underline-offset-[6px] decoration-[1.5px]'
               } focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest`}
             >
               Offers
@@ -273,47 +277,52 @@ export const StorefrontHeader: React.FC<StorefrontHeaderProps> = ({
             <Link
               href="/rewards"
               aria-current={isRewardsActive ? 'page' : undefined}
-              className={`py-2 px-1 rounded-[2px] transition-colors ${
+              className={`min-h-[44px] px-1 flex items-center rounded-[2px] transition-colors ${
                 isRewardsActive
-                  ? 'font-semibold text-forest underline underline-offset-4 decoration-2'
-                  : 'font-medium text-forest/85 hover:text-forest hover:underline underline-offset-4'
+                  ? 'font-medium text-forest underline underline-offset-[6px] decoration-[1.5px]'
+                  : 'font-normal text-forest/90 hover:text-forest hover:underline underline-offset-[6px] decoration-[1.5px]'
               } focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest`}
             >
               Rewards
             </Link>
           </nav>
 
-          {/* Right Action Controls: Search area, Account, Basket */}
-          <div className="flex items-center gap-3 flex-none">
-            {/* Active Desktop Search Component */}
-            <div className="w-64 lg:w-72">
+          {/* Flexible space: intentional grouping (brand + nav left, search + actions right) */}
+          <div className="flex-1" aria-hidden="true" />
+
+          {/* Right Group: Search → Account → Cart */}
+          <div className="flex items-center flex-none">
+            {/* Active Desktop Search Component (recessed pill) */}
+            <div className="w-[280px] lg:w-[356px]">
               <StorefrontSearch variant="desktop" />
             </div>
 
-            {/* Account Placeholder (Non-interactive visual indicator - not in tab order) */}
+            {/* Account (no account route yet: non-focusable, announced to assistive tech) */}
             <div
-              className="w-11 h-11 flex items-center justify-center text-muted select-none"
-              aria-hidden="true"
-              title="Account (Coming soon)"
+              role="img"
+              aria-label="Account (coming soon)"
+              title="Account (coming soon)"
+              className="ml-4 lg:ml-5 w-11 h-11 flex items-center justify-center select-none"
             >
-              <AccountIcon size={20} tone="muted" />
+              <AccountIcon size={24} tone="forest" strokeWidth={1.4} aria-hidden="true" />
             </div>
 
-            {/* Basket Placeholder (Non-interactive visual indicator - not in tab order) */}
+            {/* Cart (no cart yet: non-focusable, announced with real count) */}
             <div
-              className="h-[44px] px-3.5 flex items-center gap-2 text-muted bg-surface/60 border border-rule rounded-[4px] font-sans text-[14px] select-none"
-              aria-hidden="true"
-              title="Basket (Coming soon)"
+              role="img"
+              aria-label={`Basket, ${cartItemCount} ${cartItemCount === 1 ? 'item' : 'items'} (coming soon)`}
+              title="Basket (coming soon)"
+              className="ml-3 lg:ml-4 w-11 h-11 flex items-center justify-center select-none"
             >
-              <div className="relative flex items-center">
-                <CartIcon size={20} tone="muted" />
-                <span className="absolute -top-1.5 -right-2 bg-muted text-cream text-[10px] w-4 h-4 rounded-full flex items-center justify-center leading-none">
-                  0
+              <span className="relative flex items-center" aria-hidden="true">
+                <CartIcon size={24} tone="forest" strokeWidth={1.4} />
+                <span className="absolute -top-[7px] -right-[9px] min-w-[18px] h-[18px] px-1 bg-forest text-surface font-sans text-[10.5px] font-semibold rounded-full flex items-center justify-center leading-none">
+                  {cartItemCount}
                 </span>
-              </div>
-              <span className="hidden lg:inline text-[13px]">Basket</span>
+              </span>
             </div>
           </div>
+        </div>
         </div>
 
         {/* MOBILE HEADER (56px) - visible at <1024px (<md) */}

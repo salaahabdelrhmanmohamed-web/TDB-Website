@@ -75,6 +75,7 @@ Phase 4 — Storefront UX
 7. **Keyboard Accessibility:** Non-interactive elements must not enter the tab order. Focus outlines use native `outline-2 outline-offset-2 outline-forest`.
 8. **Mutual Exclusivity:** Opening mobile search closes drawer; opening drawer closes mobile search. Focus returns cleanly to trigger buttons upon closing.
 9. **Single Token Source of Truth:** Styling tokens defined exclusively in `globals.css` and `tailwind.config.ts`.
+10. **Storefront Header Visual Styling Single Source of Truth:** The floating pill header reference (`v2/public/images/approved-header-only.png`, documented in `header_styling_source_of_truth.md`) governs header **visual styling only**: floating pill geometry (`rounded-full`), light surface with subtle border, serif `TDB` wordmark treatment, recessed pill search, outline icons, and solid forest cart badge. **Do NOT copy its text/content** (no `Categories`, `About`, `Recipes`, `Sustainability`, no reference search placeholder, no badge value `3`). Existing approved content is preserved: `TDB`, `Shop` / `Offers` / `Rewards`, current search placeholder, Account, and Basket with its real count.
 
 ## Verification
 - **TypeScript Typecheck:** `cmd /c npx tsc --noEmit` → Exit code 0 (0 errors).

@@ -131,10 +131,14 @@ export const StorefrontSearch: React.FC<StorefrontSearchProps> = ({
           Search products and categories
         </label>
         <span
-          className="absolute left-3 text-muted pointer-events-none flex items-center"
+          className={`absolute ${isMobile ? 'left-3' : 'left-4'} text-muted pointer-events-none flex items-center`}
           aria-hidden="true"
         >
-          <SearchIcon size={18} tone="muted" />
+          {isMobile ? (
+            <SearchIcon size={18} tone="muted" />
+          ) : (
+            <SearchIcon size={17} tone="forest" strokeWidth={1.6} />
+          )}
         </span>
 
         <input
@@ -154,13 +158,17 @@ export const StorefrontSearch: React.FC<StorefrontSearchProps> = ({
             }
           }}
           onKeyDown={handleKeyDown}
-          placeholder="Search products, categories…"
+          placeholder="Search for your favorite..."
           role="combobox"
           aria-autocomplete="list"
           aria-expanded={isOpen && hasSuggestions}
           aria-controls={listboxId}
           aria-activedescendant={highlightedItem ? highlightedItem.id : undefined}
-          className="w-full h-[44px] pl-10 pr-4 bg-surface border border-rule rounded-[4px] font-sans text-[14px] text-forest placeholder:text-muted focus:outline-2 focus:outline-offset-2 focus:outline-forest transition-colors"
+          className={
+            isMobile
+              ? 'w-full h-[44px] pl-10 pr-4 bg-surface border border-rule rounded-[4px] font-sans text-[14px] text-forest placeholder:text-muted focus:outline-2 focus:outline-offset-2 focus:outline-forest transition-colors'
+              : 'w-full h-[44px] pl-11 pr-5 bg-stone/45 border border-transparent rounded-full font-sans text-[14px] text-forest placeholder:text-muted/75 hover:bg-stone/55 focus:bg-stone/35 focus:outline-2 focus:outline-offset-2 focus:outline-forest transition-colors'
+          }
         />
       </form>
 
